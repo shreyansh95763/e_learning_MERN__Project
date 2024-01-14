@@ -1,15 +1,18 @@
 import { Analytics } from "../components/Analytics";
 import '../index.css';
+import { useAuth } from "../store/auth";
 
 export const Home = () => {
+  const {user} = useAuth();
+  console.log("User Detail ",user);
   return (
     <>
       <main>
         <section className="section-hero">
           <div className="container grid grid-two-cols">
             <div className="hero-content">
-              <p>We are the World Best IT Company</p>
-              <h1>Welcome to Thapa Technical</h1>
+              <p>Welcome, {user ? user.username :`to our website`}</p>
+              <h1>Welcome to Ansh Learning</h1>
               <p>
                 Are you ready to take your business to the next level with
                 cutting-edge IT solutions? Look no further! At Thapa Technical,

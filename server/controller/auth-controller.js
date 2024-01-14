@@ -1,6 +1,6 @@
 const { raw } = require("express");
 const User = require("../model/user-model");
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
 
 
 // *_______________
@@ -89,5 +89,18 @@ const register = async (req,res)=>{
         console.log("Getting to on home pages",error);
     }
 }
+// *_______________
+//   User logic
+//*________________
 
-module.exports = {home,register,login};
+const user = async (req, res) => {
+    try{
+    const userData = req.user;
+    console.log(userData);
+    return res.status(200).json({ msg: userData });
+  } catch (error) {
+    console.log(` error from user route ${error}`);
+}
+}
+
+module.exports = {home,register,login, user};

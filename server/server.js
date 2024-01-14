@@ -3,6 +3,7 @@ const express = require("express");
 const PORT = 5000;
 const cors = require('cors');
 const app = express();
+const serviceRoute = require("./router/service-router")
 const authRoute = require("./router/auth-router");
 const contactRoute = require("./router/contact-router");
 const connectDB = require("./utils/db");
@@ -26,6 +27,7 @@ app.use(express.json());
 //Mount the Router
 app.use("/form", contactRoute);
 app.use("/", authRoute);
+app.use("/",serviceRoute);
 
 app.use(errorMiddleware);
 

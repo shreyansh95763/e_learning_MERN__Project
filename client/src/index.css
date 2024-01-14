@@ -377,7 +377,10 @@ a.active {
   & .container:first-child {
     padding: 0;
   }
-
+.service{
+  display: flex;
+  justify-content: space-between;
+}
   & .grid-three-cols {
     grid-template-columns: repeat(3, 1fr);
     gap: 3.2rem;

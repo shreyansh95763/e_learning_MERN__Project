@@ -1,14 +1,16 @@
-import {useContext, createContext, useState} from "react";
+import {useContext, createContext, useState, useEffect} from "react";
 
 export const AuthContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children })=>{
-    const [token,setToken ] = useState("");
-    
+    const [token,setToken ] = useState(localStorage.getItem("token"));
+    const [user, setUser] = useState("");
+    const [services,setServices] = useState("");
+
     const storeTokenInLs=(serverToken)=>{
         setToken(serverToken);
-        return localStorage.setItem("token ",serverToken);
+        return localStorage.setItem("token",serverToken);
     }
 
     let isLoggedIn = !!token;
@@ -17,10 +19,50 @@ export const AuthProvider = ({ children })=>{
 
     const UseLogout = ()=>{
         setToken("");
-        // return localStorage.removeItem("token");
+        // return localStorage.removeItem('token');
         return localStorage.clear();
     }
-    return <AuthContext.Provider value={{ isLoggedIn,storeTokenInLs ,UseLogout}}>
+    // JWT Authorization of user
+    const userAuthorization= async() =>{
+        try{
+            const respone = await fetch("http://localhost:5000/user",{
+                method:"GET",
+                headers:{
+                    Authorization : `Bearer ${token}`,
+                },
+            });
+            if(respone.ok){
+                const data = await respone.json();
+
+                console.log("user data : ",data);
+                setUser(data.userData);
+            }
+    
+        }
+        catch(error){
+            console.error("Error to fetching the data");
+        }
+    };
+    
+    const getServiceData = async () =>{
+        try{
+            const response = await fetch('http://localhost:5000/service',{
+                method:"GET",
+            });
+            if(response.ok){
+                const service = await response.json();
+                setServices(service.data);
+            }
+            console.log("Services : ",response);
+        }catch(error){
+            console.log(error);
+        }
+    }
+    useEffect(() => {
+        getServiceData();
+        userAuthorization();
+    },[]);
+    return <AuthContext.Provider value={{ isLoggedIn,storeTokenInLs ,UseLogout, user, services}}>
         {children}
     </AuthContext.Provider>
 }
